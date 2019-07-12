@@ -3,8 +3,8 @@ GENERATED_MATCHES_FILE = output.txt
 RENDERED_FILE = index.html
 GROUP_SIZE = 4
 
-GENERATOR_SCRIPT = intern_social_matcher.py
-RENDERER_SCRIPT = render_matches.py
+GENERATOR_SCRIPT = src/intern_social_matcher.py
+RENDERER_SCRIPT = src/render_matches.py
 
 .PHONY: all generate render clean
 
