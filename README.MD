@@ -1,12 +1,13 @@
-# [Intern Social Matcher](https://pradyumnashome.github.io/scripts/src/intern-social-matcher/)
+# Intern Social Matcher
 
-Get introduced to new interns every week.
-
-Hosted [here](https://pradyumnashome.github.io/scripts/src/intern-social-matcher/).
+## Intern Social Matcher
+Hosted [here](https://pradyumnashome.github.io/intern-social-matcher/src/) using GitHub Pages!
 
 ## Usage
 
 ### Generate Matches
+
+Run `make generate`.
 
 To generate matches, run
 
@@ -22,6 +23,8 @@ where
 
 ### Render intern matching output
 
+Run `make render`.
+
 To render a web page, run
 
 ```bash
@@ -33,3 +36,5 @@ where
 `matches_file` is a file with the output from the first step. It has generated matches in a double-nested JSON list.
 
 `output_file` is the HTML file that is rendered from the matches.
+
+To do both in sequence, run `make all`.
