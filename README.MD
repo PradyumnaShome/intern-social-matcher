@@ -1,7 +1,7 @@
 # Intern Social Matcher
+Get introduced to new employees at your workplace, every week.
 
-## Intern Social Matcher
-Hosted [here](https://pradyumnashome.github.io/intern-social-matcher/src/) using GitHub Pages!
+Hosted [here](https://pradyumnashome.github.io/intern-social-matcher/) using GitHub Pages!
 
 ## Usage
 
