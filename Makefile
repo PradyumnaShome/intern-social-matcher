@@ -1,6 +1,6 @@
 INPUT_FILE = interns_with_interests.csv
 GENERATED_MATCHES_FILE = output.txt
-RENDERED_FILE = index.html
+RENDERED_FILE = src/index.html
 GROUP_SIZE = 4
 
 GENERATOR_SCRIPT = src/intern_social_matcher.py

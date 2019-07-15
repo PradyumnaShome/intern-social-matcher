@@ -3,7 +3,7 @@ import json
 import os
 import sys
 
-TEMPLATES_DIRECTORY = "templates"
+TEMPLATES_DIRECTORY = "src/templates"
 TEMPLATE_MATCHES = "matches.html"
 ARG_MISSING_ERROR_MESSAGE = "See usage in README. Must provide path to JSON output of matching algorithm, and output HTML file."
 
