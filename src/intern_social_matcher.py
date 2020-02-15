@@ -4,6 +4,7 @@ import sys
 import os
 import json
 import csv
+import boto3
 
 COMMON_FIELD = "common_attributes"
 INTERESTS_FIELD = "interests"
@@ -16,11 +17,7 @@ def preprocess_data(input_filename):
     intern_list = []
     with open(sys.argv[1]) as intern_list_file:
         csv_reader = csv.DictReader(intern_list_file)
-        for index, row in enumerate(csv_reader):
-            if index == 0:
-                pass
-            intern_list.append(row)
-        return intern_list
+        return [row for row in csv_reader]
 
 
 def generate_intern_pairings(intern_list, group_size):
@@ -30,10 +27,7 @@ def generate_intern_pairings(intern_list, group_size):
     random.shuffle(intern_list)
 
     intern_count = len(intern_list)
-    return [
-        intern_list[x:x + group_size]
-        for x in range(0, intern_count, group_size)
-    ]
+    return [intern_list[x : x + group_size] for x in range(0, intern_count, group_size)]
 
 
 def postprocess_matches(matches):
@@ -62,9 +56,7 @@ def preprocess_interests(match):
     Replaces the comma-delimited interests list, with a list of interests, and accumulates them across everyone in the group.
     Every interest is normalized, to ensure duplicates are not accidentally overcounted later.
     """
-    list_of_all_interests = [
-        person[INTERESTS_FIELD].split(",") for person in match
-    ]
+    list_of_all_interests = [person[INTERESTS_FIELD].split(",") for person in match]
 
     flattened_interest_list = [
         normalize_word(item) for list_ in list_of_all_interests for item in list_
@@ -92,8 +84,7 @@ def generate_common_attributes(match_object, all_interests):
     count_uncommon_interests = 5 - len(generated_interests)
 
     for i in range(count_uncommon_interests):
-        generated_interests.append(random.choice(
-            all_interests_without_duplicates))
+        generated_interests.append(random.choice(all_interests_without_duplicates))
     return generated_interests
 
 
@@ -113,7 +104,8 @@ def postprocess_match(match):
         if field == INTERESTS_FIELD:
             all_interests = preprocess_interests(match)
             generated_interests = generate_common_attributes(
-                match_object, all_interests)
+                match_object, all_interests
+            )
             dict_upsert_list(match_object, COMMON_FIELD, generated_interests)
         else:
             for person in match:
@@ -154,21 +146,25 @@ if __name__ == "__main__":
     if len(sys.argv) != 4:
         print(
             "See usage in README. Must provide path to file with a newline-delimited list of interns, group size, and output file.",
-            file=sys.stderr)
+            file=sys.stderr,
+        )
         sys.exit(os.EX_USAGE)
 
     input_filename = sys.argv[1]
     intern_list = preprocess_data(input_filename)
 
     group_size = int(sys.argv[2])
-    matches = generate_intern_pairings(intern_list=intern_list,
-                                       group_size=group_size)
+    matches = generate_intern_pairings(intern_list=intern_list, group_size=group_size)
 
     postprocessed_matches = postprocess_matches(matches)
 
-    output_serialized = json.dumps(
-        postprocessed_matches, indent=4, sort_keys=True)
+    output_serialized = json.dumps(postprocessed_matches, indent=4, sort_keys=True)
 
     output_filename = sys.argv[3]
-    with open(output_filename, 'w') as output_file:
+    with open(output_filename, "w") as output_file:
         output_file.write(output_serialized)
+
+    # Upload file via S3
+    s3 = boto3.client('s3')
+    with open(output_filename, "rb") as f:
+        s3.upload_fileobj(f, "intern-social-matcher", "intern-groups.json")

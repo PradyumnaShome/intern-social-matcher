@@ -1,29 +1,34 @@
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
+import flask
+from flask import render_template
+import requests
+import logging
 import os
-import sys
 
-TEMPLATES_DIRECTORY = "src/templates"
-TEMPLATE_MATCHES = "matches.html"
-ARG_MISSING_ERROR_MESSAGE = "See usage in README. Must provide path to JSON output of matching algorithm, and output HTML file."
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+logging.basicConfig(level=logging.DEBUG)
+
+S3_API_URL = os.getenv("S3_API_URL")
+
+
+def get_intern_groups():
+    response = requests.get(S3_API_URL)
+
+    content = response.json()
+
+    logging.debug(content)
+
+    return content
+
+
+@app.route("/", methods=["GET"])
+def home():
+    matches = get_intern_groups()
+    logging.debug(f"Current Directory: {os.getcwd()}")
+
+    return render_template("matches.html", list_matches=matches)
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(ARG_MISSING_ERROR_MESSAGE, file=sys.stderr)
-        sys.exit(os.EX_USAGE)
-
-    env = Environment(loader=FileSystemLoader(TEMPLATES_DIRECTORY),
-                      autoescape=select_autoescape(['html', 'xml']))
-
-    generated_matches_filename = sys.argv[1]
-
-    matches = None
-    with open(generated_matches_filename) as generated_matches_file:
-        matches = json.load(generated_matches_file)
-
-    template = env.get_template(TEMPLATE_MATCHES)
-
-    output_filename = sys.argv[2]
-
-    with open(output_filename, 'w') as file:
-        file.write(template.render(list_matches=matches))
+    app.run()
