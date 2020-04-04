@@ -1,0 +1,7 @@
+email,interests,name,university,slack_name
+a@gmail.com,"Interest A,Interest B, Interest C",Person A, University A, @PersonA
+b@gmail.com,"Interest A,Interest D, Interest E",Person B, University C, @PersonB
+c@gmail.com,"Interest F,Interest G, Interest H",Person C, University C, @PersonC
+d@gmail.com,"Interest G,Interest G, Interest B",Person L, University D, @PersonD
+e@gmail.com,"Interest H,Interest A, Interest J",Person K, University E, @PersonE
+f@gmail.com,"Interest J,Interest G, Interest H",Person M, University B, @PersonF

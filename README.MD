@@ -3,6 +3,9 @@ Get introduced to new employees at your workplace, every week.
 
 Hosted [here](https://pradyumnashome.github.io/intern-social-matcher/) using GitHub Pages!
 
+I used Google Forms -> CSV to get data from my fellow interns.
+[Here](https://github.com/PradyumnaShome/intern-social-matcher/blob/master/interns_with_interests.csv) is a sample input intern file with the fields I collected. 
+
 ## Usage
 
 ### Generate Matches
